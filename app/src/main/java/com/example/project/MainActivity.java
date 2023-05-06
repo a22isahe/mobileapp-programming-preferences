@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor MyRefEditor;
     Button button;
   TextView viewText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewText = findViewById(R.id.viewText);
         button = findViewById(R.id.button);
+        MyRef = getSharedPreferences("SHARED_PREF", MODE_PRIVATE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        viewText.setText(MyRef.getString("Text","empty"));
 
+    }
 }
