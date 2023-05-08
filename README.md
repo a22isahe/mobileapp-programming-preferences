@@ -1,42 +1,68 @@
 
-# Rapport
+# Rapport Shared Preferences
 
 **Skriv din rapport här!**
 
-_Du kan ta bort all text som finns sedan tidigare_.
+Först skapades aktiviteten Secondactivity. En knapp och en textView skapades och constaints sattes. 
+I mainActivity skapades en EditText och en knapp. Här blev ordningen på sidorna fel och projektet 
+började om från början. 
 
-## Följande grundsyn gäller dugga-svar:
+I SecondActivity skapades istället en EditText och en knapp. Constraints sattes på båda.
+I MainActivity skapades en TextView och en knapp och constraints sattes. En koppling till vardera
+layout-filer lades till.
 
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
+Meningen är att man i Secondactivity ska kunna skriva in en text och sedan spara texten. När man sedan stänger ner appen eller
+förflyttar sig till MainActivity ska texten visas i TextView. Knappen i MainView är till för att 
+byta aktivitet till SecondActivity. Detta genomfördes genom att sätta en ButtonLIstener på Knappen i mainActivity
+som när den triggas skapar ett nytt intent som startar SecondActivity.
 
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+I AndroidManifests.xml lades MainActivity till som en förälder till SecondActivity för att automatiskt få
+en pil som tar användaren tillbaka till MainActivity.
 
+För att lyckas spara texten I SecondActivity användes Shared Preferences vilket innebär att data sparas i det lokala 
+minnet som en nyckel ihop med data. 
+
+Ett objekt av typen SharedPreferences (identifierare: shared) deklarerades och ett annat av typen 
+SharedPreferences.Editor (identifierare:editor)skapades för att kunna spara till SharedPreferences.
+shared initierades i oncreate genom att hämta preferences genom metoden:
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+shared = getSharedPreferences("SHARED_PREF",MODE_PRIVATE);
+```
+Sedan skapades en metod för att spara data:
+    Först initieras editor, metoden putString() används för att lägga till en sträng och
+    nyckeln "Text" identifierar strängen.
+    apply() skickar data tillbaka till SharedPreferences-Objektet.
+```
+public void saveToPreference(){
+
+        editor = shared.edit();
+        editor.putString("Text", text.getText().toString());
+        editor.apply();
+        Log.d("hej", "Applied: "); 
     }
-}
+```
+I SecondActivity lades en buttonListener till dess knapp och metoden SaveToPreference() anropas när 
+den triggas.
+
+I mainActivity deklarerades ett till SharedPreferences objekt (identifierare: Myref) som initieras på samma sätt som i 
+SecondActivity. Här skapas dock ingen editor eftersom objektet aldrig ska skrivas till här.
+I Main-Aktivitetens TextView sätts texten till den hämtade strängen från SharedPreferences-objektet. Notera att
+detta sker i Metoden onResume som körs varje gång appen återupptas och att nyckeln för strängen i SecondActivity.
+"empty" innebär texten som står ifall den hämtade strängen inte skulle finnas.
+:
+
+```
+     @Override
+    protected void onResume() {
+        super.onResume();
+
+        viewText.setText(myRef.getString("Text","empty"));
+
+    }
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
 
-![](android.png)
 
-Läs gärna:
+![](Shared_Pref_main.png)
+![](Shared_pref_Second.png)
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.

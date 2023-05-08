@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
-    private SharedPreferences MyRef;
-    private SharedPreferences.Editor MyRefEditor;
+    private SharedPreferences myRef;
+
     Button button;
   TextView viewText;
 
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewText = findViewById(R.id.viewText);
         button = findViewById(R.id.button);
-        MyRef = getSharedPreferences("SHARED_PREF", MODE_PRIVATE);
+        myRef = getSharedPreferences("SHARED_PREF", MODE_PRIVATE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        viewText.setText(MyRef.getString("Text","empty"));
+        viewText.setText(myRef.getString("Text","empty"));
 
     }
 }

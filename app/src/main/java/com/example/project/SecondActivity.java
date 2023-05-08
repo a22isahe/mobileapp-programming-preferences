@@ -46,7 +46,7 @@ private String SHARED ;
         editor = shared.edit();
         editor.putString("Text", text.getText().toString());
         editor.apply();
-        Log.d("hej", "Applied: ");
+
     }
 
 
